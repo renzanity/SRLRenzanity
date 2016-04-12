@@ -16,7 +16,7 @@ type TOreInfo = record
   DTM, DTM2, count, count2, price, price2, color, color2, tol, tol2, shiftTime, shiftTime2: integer;
   hue, hue2, sat, sat2: extended;
   name: string;
-  mouseOverText, mouseOverText2: array of string;
+  mouseOverText, mouseOverText2, mouseOverTextG, mouseOverTextG2: array of string;
 end;
 
 var
@@ -24,8 +24,8 @@ var
   sapphireDTM, emeraldDTM, rubyDTM, diamondDTM, sapphireCount, emeraldCount, rubyCount,
   diamondCount, sapphirePrice, emeraldPrice, rubyPrice, diamondPrice, antiBanP: integer;
   BreakTimer, ScriptTimer: TTimeMarker;
-  paint, powerMine, copTin: boolean;
-  oreType, mapLoc: string;
+  paint, powerMine, copTin, presetNum: boolean;
+  oreType, mapLoc, preset: string;
   path, area: array [0..3] of TPointArray;
   ore: TOreInfo;
 
@@ -41,12 +41,14 @@ begin
     editBoxHints := ['Enter any world you want to go, -1 to just make it press play, 0 for random worlds', 'How long before you take a break (in minutes)', 'How long the break should be (in minutes)', 'How long do you want the script to run (in minutes)', 'How often do you want the antiban to initiate? (10 = 10percent)'];
     checkBoxLabels := ['Power Mine', 'Display Paint', 'Display Debug'];
     checkBoxDefaults := ['False', 'True', 'False'];
-    comboBoxLabels := ['What to Mine', 'Where to Mine'];
-    comboBoxDefaults := ['Tin', 'Varrock West'];
-    comboBoxHints := ['Choose the type of rock you want to mine', 'Choose where you want to mine'];
+    comboBoxLabels := ['Preset number', 'What to Mine', 'Where to Mine'];
+    comboBoxDefaults := ['1', 'Tin', 'Varrock West'];
+    comboBoxHints := ['Choose the type of rock you want to mine', 'Choose where you want to mine', 'What preset do you want to use?'];
     setLength(comboBoxItems, length(comboBoxLabels));
-    comboBoxItems[0] := ['Tin & Copper', 'Tin', 'Copper', 'Clay', 'Iron'];
-    comboBoxItems[1] := ['Varrock West', 'Varrock East'];
+    comboBoxItems[0] := ['1', '2'];
+    comboBoxItems[1] := ['Tin & Copper', 'Tin', 'Copper', 'Clay', 'Iron'];
+    comboBoxItems[2] := ['Varrock West', 'Varrock East'];
+
   end;
 end;
 procedure declarePlayers();
@@ -71,6 +73,7 @@ begin
 
       strings[0] := playerForm.players[i].settings[8];
       strings[1] := playerForm.players[i].settings[9];
+      strings[2] := playerForm.players[i].settings[10];
 
       world := integers[0];
       breakT := integers[1];
@@ -78,8 +81,9 @@ begin
       runT := integers[3];
       antiBanP := integers[4];
       paint := booleans[1];
-      oreType := strings[0];
-      mapLoc := strings[1];
+      preset := strings[0];
+      oreType := strings[1];
+      mapLoc := strings[2];
 
       if booleans[0] then
         powerMine := true;
@@ -91,6 +95,11 @@ begin
       begin
         scriptPaintBMP := loadBitmap(appPath + 'Scripts\VWMinerImages\VWMiner.png');
         fastReplaceColor(scriptPaintBMP, 0, 1);
+      end;
+
+      case preset of
+        '1' : presetNum := true;
+        '2' : presetNum := false;
       end;
 
     end;
@@ -177,6 +186,7 @@ begin
               ore.price := grandExchange.getPrice(434);
               ore.name := 'clay';
               ore.mouseOverText := ['ine Clay'];
+              ore.mouseOverTextG := ['ake Clay'];
               ore.shiftTime := (randomRange(5000, 5700));
             end;
     'Iron': begin
@@ -189,6 +199,7 @@ begin
               ore.price := grandExchange.getPrice(440);
               ore.name := 'iron';
               ore.mouseOverText := ['ine Iron'];
+              ore.mouseOverTextG := ['ake Iron'];
               ore.shiftTime := (randomRange(6000, 7500));
             end;
     'Tin': begin
@@ -201,6 +212,7 @@ begin
              ore.price := grandExchange.getPrice(438);
              ore.name := 'tin';
              ore.mouseOverText := ['ine Tin'];
+             ore.mouseOverTextG := ['ake Tin'];
              ore.shiftTime := (randomRange(10000, 13000));
            end;
     'Copper': begin
@@ -213,6 +225,7 @@ begin
                 ore.price := grandExchange.getPrice(436);
                 ore.name := 'copper';
                 ore.mouseOverText := ['ine Copper'];
+                ore.mouseOverTextG := ['ake Copper'];
                 ore.shiftTime := (randomRange(10000, 13000));
               end;
     'Tin & Copper': begin
@@ -225,6 +238,7 @@ begin
                       ore.DTM := DTMFromString('mggAAAHicY2OAgI//////A8RMQDY3EP8FskHiID4rELMDMScQ8wNxSmw0VAYViwBJRhIwBAAAu5oNYA==');
                       ore.price := grandExchange.getPrice(438);
                       ore.mouseOverText := ['ine Tin'];
+                      ore.mouseOverTextG := ['ake Tin'];
                       ore.shiftTime := (randomRange(10000, 13000));
 
                       ore.color2 := (4291530);
@@ -235,6 +249,7 @@ begin
                       ore.price2 := grandExchange.getPrice(436);
                       ore.name := 'tin & copper';
                       ore.mouseOverText2 := ['ine Copper'];
+                      ore.mouseOverTextG2 := ['ake Copper'];
                       ore.shiftTime2 := (randomRange(10000, 13000));
                     end;
   end;
@@ -379,7 +394,7 @@ begin
   profitPH := round((profit * 60) / (ScriptTimer.getTime() / 60000));
 
   clearDebug(); //Progress report in the debug
-  writeLn('v1.0');
+  writeLn('v1.1');
   writeLn('/============================================\');
   writeLn('|================ Varrock Miner =============|');
   writeLn('|============================================|');
@@ -430,6 +445,19 @@ begin
   tabBackPack.clickDTM(rubyDTM, MOUSE_RIGHT, 'rop', randomRange(500, 700), true);
   tabBackPack.clickDTM(diamondDTM, MOUSE_RIGHT, 'rop', randomRange(500, 700), true);
 end;
+{*To loot the same ore you're mining from the ground*
+procedure loot();
+begin
+  if not isLoggedIn() then
+    exit;
+
+  if renzanityFindObj(0.56, 0.22, 5, 5, 2508378, 5, MOUSE_LEFT, mouseOverTextG, ['']) or renzanityFindObj(0.14, 0.16, 5, 5, 2837357, 8, MOUSE_LEFT, mouseOverTextG, ['']) then
+    if lootScreen.isOpen(randomRange(500, 1000)) then
+    repeat
+      lootScreen.lootDTM(ore.DTM);
+      wait(randomRange(300, 600));
+    until lootScreen.c
+end;}
 {*Failsafe for when your character wanders off the radar*}
 procedure areaCheck();
 begin
@@ -471,9 +499,19 @@ begin
 
   depositTimer.start(); //Failsafe for when you get stuck, trying to deposit your ores
   repeat
-    bankScreen.quickDeposit(QUICK_DEPOSIT_INVENTORY);
-    wait(randomRange(1000, 1200));
-  until (bankScreen.isPackEmpty()) or (depositTimer.getTime() > randomRange(30000, 60000));
+    if presetNum then
+    begin
+      if (randomRange(1, 100) <= 30) then
+        bankScreen.quickDeposit(QUICK_DEPOSIT_INVENTORY)
+      else typeByte(VK_1);
+    end else
+    begin
+      if (randomRange(1, 100) <= 30) then
+        bankScreen.quickDeposit(QUICK_DEPOSIT_INVENTORY)
+      else typeByte(VK_2);
+    end;
+    wait(randomRange(800, 1000));
+  until (bankScreen.isPackEmpty()) or (tabBackPack.countDTM(ore.DTM) < 1) or (depositTimer.getTime() > randomRange(30000, 60000));
   bankScreen.close();
   antiBan();
 end;
