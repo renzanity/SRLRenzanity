@@ -1,0 +1,61 @@
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::Varrock Miner Changelog::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Varrock Miner v1.71 release
+-Fixed the part where the script mines for copper and tin but doesn't count them correctly
+
+Varrock Miner v1.7 release
+-Rewritten thescript to shorten some parts of the it
+
+Varrock Miner v1.66 release
+-Quick fix on the copper and tin mining lines
+
+Varrock Miner v1.65 release
+-Fixed the power miner (fixed item dropping)
+
+Varrock Miner v1.64 release
+-You can now specify what Quick Key to use to drop your ore
+-Changed the SPS map for it was too small
+-Changed the findObj function to be able to click on offsets and not just the middle of the ATPA
+-Some minor fixes on some procedures
+
+Varrock Miner v1.63 release
+-Edited the findObj function to click random offsets from the middle of the ATPA
+
+Varrock Miner v1.6 release
+-Updated the DTMs
+-Updated the Varrock West mine paths
+
+Varrock Miner v1.5 release
+-Updated the DTMs (hopefully that fixes the power mining issue)
+-Now banks by randomly clicking the bank booth or the banker
+-Updated progress report
+
+Varrock Miner v1.4 release
+-Revised the Updater again (please download the new one)
+-Changed the banking procedure (removed the booleans 'preNum' and 'deopOption')
+-Now makes a folder for all the files for this script and downloads the files there
+-Edited the DTMs for the gems (It works now I think?)
+-Reduced the minibreak wait time to randomRange(5seconds, 15seconds)
+-Added mouseMovingObject on the antiban. (See the SRL include for more info)
+-Changed the code for mining Tin and Copper at the same time
+
+Varrock Miner v1.3 is now open for testing
+-Added an auto updater on the script itself to automatically download a new version when you run the script. (Be sure to check for a new script frequently for I edit the script every so often)
+-Auto downloads the SPS map and paint images and placing them on their respective folders
+-Edited the toMine(); procedure
+-When mining for Tin and Copper, it randomly mines the stones instead of mining them 14x14
+-Edited the Areas for polygons
+-Fixed the progress report procedure
+-Uploaded a new Varrock Miner Updater file (download it again if you have downloaded the old ones)
+
+Varrock Miner v1.2 is now open for testing
+-You can now choose how to deposit your ores (Using a preset or just plain quickdeposit)
+-You can choose what preset to use when depositing ores
+
+Varrock Miner v1.0 is now open for testing!
+-You can now mine on either Varrock West or East mining areas
+-You can now mine for Copper
+-You can also mine for both Tin & Copper
+P.S. Don't forget to grab the new SPS Map for this.
